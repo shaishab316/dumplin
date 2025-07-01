@@ -18,10 +18,7 @@ export const OtpServices = {
     const user = await User.findOne({ email });
 
     if (!user)
-      throw new ServerError(
-        StatusCodes.UNAUTHORIZED,
-        'You are not authorized.',
-      );
+      throw new ServerError(StatusCodes.NOT_FOUND, 'User does not exist.');
 
     const otp = otpGenerator(config.otp.length);
 

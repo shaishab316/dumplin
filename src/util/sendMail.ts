@@ -16,6 +16,17 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+export const verifyEmailTransporter = async () => {
+  try {
+    return await transporter.verify();
+  } catch (error: any) {
+    throw new Error(
+      'Email credentials verification failed. Check your .env configuration: ' +
+        error.message,
+    );
+  }
+};
+
 /**
  * Send email
  * @param {TEmailProps} values - Email values
@@ -30,12 +41,12 @@ export const sendEmail = async (values: TEmailProps) => {
     });
 
     if (!accepted.length)
-      throw new ServerError(StatusCodes.BAD_REQUEST, 'Mail not sent');
+      throw new ServerError(StatusCodes.SERVICE_UNAVAILABLE, 'Mail not sent');
 
     logger.info(colors.green(`✔ Mail send successfully. On: ${accepted[0]}`));
   } catch (error: any) {
     errorLogger.error(colors.red('❌ Email send failed'), error.message);
-    throw new ServerError(StatusCodes.BAD_REQUEST, error.message);
+    throw new ServerError(StatusCodes.SERVICE_UNAVAILABLE, error.message);
   }
 };
 

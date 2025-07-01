@@ -7,6 +7,7 @@ import shutdownServer from './shutdownServer';
 import connectDB from './connectDB';
 import { AdminServices } from '../../app/modules/admin/Admin.service';
 import killPort from 'kill-port';
+import { verifyEmailTransporter } from '../sendMail';
 
 const {
   server: { port, ip_address, name },
@@ -24,6 +25,8 @@ export default async function startServer() {
 
     await connectDB();
     await AdminServices.seed();
+
+    await verifyEmailTransporter();
 
     const server = createServer(app).listen(port, ip_address, () => {
       logger.info(
