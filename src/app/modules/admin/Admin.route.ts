@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { TRoute } from '../../../types/route.types';
 import { UserRoutes } from '../user/User.route';
 import { OtpRoutes } from '../otp/Otp.route';
-import { NotificationRoutes } from '../notification/Notification.route';
 
 const routes: TRoute[] = [
   {
@@ -12,10 +11,6 @@ const routes: TRoute[] = [
   {
     path: '/otps',
     route: OtpRoutes.admin,
-  },
-  {
-    path: '/notifications',
-    route: NotificationRoutes,
   },
 ];
 

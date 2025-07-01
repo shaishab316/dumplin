@@ -4,7 +4,6 @@ import serveResponse from '../../../util/server/serveResponse';
 import { StatusCodes } from 'http-status-codes';
 import { userExcludeFields } from './User.constant';
 import { AuthServices } from '../auth/Auth.service';
-import { NotificationServices } from '../notification/Notification.service';
 
 export const UserControllers = {
   create: catchAsync(async ({ body }, res) => {
@@ -13,11 +12,6 @@ export const UserControllers = {
     const { accessToken, refreshToken } = await AuthServices.retrieveToken(
       user._id!,
     );
-
-    await NotificationServices.create({
-      title: `${user.name} registered successfully!`,
-      description: `${user.name} registered successfully! At ${new Date()}`,
-    });
 
     AuthServices.setRefreshToken(res, refreshToken);
 
@@ -37,11 +31,6 @@ export const UserControllers = {
     const { accessToken, refreshToken } = await AuthServices.retrieveToken(
       user._id!,
     );
-
-    await NotificationServices.create({
-      title: `${user.name} registered successfully!`,
-      description: `${user.name} registered successfully! At ${new Date()}`,
-    });
 
     AuthServices.setRefreshToken(res, refreshToken);
 

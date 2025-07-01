@@ -18,7 +18,7 @@ export const AuthServices = {
     return this.retrieveToken(user._id!);
   },
 
-  async setRefreshToken(res: Response, refreshToken: string) {
+  setRefreshToken(res: Response, refreshToken: string) {
     res.cookie('refreshToken', refreshToken, {
       secure: !config.server.isDevelopment,
       maxAge: verifyToken(refreshToken, ETokenType.REFRESH).exp! * 1000,

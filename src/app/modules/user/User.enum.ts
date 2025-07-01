@@ -4,8 +4,3 @@ export enum EUserRole {
   ADMIN = 'admin',
   HOST = 'host',
 }
-
-export enum EUserGender {
-  MALE = 'male',
-  FEMALE = 'female',
-}

@@ -2,11 +2,12 @@ import './configure';
 import env from '../util/env/env';
 import type ms from 'ms';
 import { genSecret } from '../util/crypto/genSecret';
+import getIpAddress from '../util/server/getIpAddress';
 
 const node_env = env<string>('node env', 'development');
 const name = env('name', 'Dumplin');
 const email = env('email user', 'admin@gmail.com');
-const ip_address = env('ip address', '0.0.0.0');
+const ip_address = env('ip address', getIpAddress());
 const port = env('port', Math.floor(Math.random() * 1_000) + 3_000);
 
 /**

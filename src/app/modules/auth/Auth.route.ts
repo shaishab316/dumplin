@@ -13,17 +13,8 @@ const router = express.Router();
 
 router.post(
   '/register',
-  capture({
-    fields: [{ name: 'avatar', maxCount: 1, width: 300 }],
-  }),
   purifyRequest(UserValidations.createUser),
   UserControllers.create,
-);
-
-router.post(
-  '/register/host',
-  purifyRequest(UserValidations.createHost),
-  UserControllers.createHost,
 );
 
 router.post(
