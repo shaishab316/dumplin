@@ -4,10 +4,13 @@ import { OtpServices } from './Otp.service';
 
 export const OtpControllers = {
   send: catchAsync(async ({ body }, res) => {
-    await OtpServices.send(body.email);
+    const otp = await OtpServices.send(body.email);
 
     serveResponse(res, {
       message: 'OTP sent successfully!',
+      data: {
+        expiredAt: otp?.exp?.toLocaleTimeString(),
+      },
     });
   }),
 

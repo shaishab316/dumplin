@@ -22,7 +22,14 @@ export const OtpServices = {
 
     const otp = otpGenerator(config.otp.length);
 
-    await Otp.findOneAndUpdate(
+    //! DO Sync for faster response
+    sendEmail({
+      to: email,
+      subject: `Your ${config.server.name} password reset OTP is ⚡ ${otp} ⚡.`,
+      html: OtpTemplates.reset(user?.name ?? 'Mr. ' + user.role, otp),
+    });
+
+    return Otp.findOneAndUpdate(
       { user: user._id },
       {
         otp,
@@ -33,12 +40,6 @@ export const OtpServices = {
         new: true,
       },
     );
-
-    await sendEmail({
-      to: email,
-      subject: `Your ${config.server.name} password reset OTP is ⚡ ${otp} ⚡.`,
-      html: OtpTemplates.reset(user?.name ?? 'Mr. ' + user.role, otp),
-    });
   },
 
   async verify(user: Types.ObjectId, otp: string) {
@@ -47,7 +48,7 @@ export const OtpServices = {
     if (!validOtp)
       throw new ServerError(
         StatusCodes.UNAUTHORIZED,
-        'You are not authorized.',
+        'Invalid or expired OTP.',
       );
 
     await validOtp.deleteOne();
