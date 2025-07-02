@@ -30,7 +30,7 @@ const auth = (
     )
       throw new ServerError(
         StatusCodes.FORBIDDEN,
-        'Sorry, you cannot access this resource!',
+        `Permission denied. You are not ${roles.join(' or ')}!`,
       );
 
     next();
