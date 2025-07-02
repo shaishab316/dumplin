@@ -19,7 +19,7 @@ export const AuthValidations = {
   refreshToken: z.object({
     cookies: z.object({
       refreshToken: z.string({
-        required_error: 'refreshToken is missing',
+        required_error: 'Your session has expired.',
       }),
     }),
   }),

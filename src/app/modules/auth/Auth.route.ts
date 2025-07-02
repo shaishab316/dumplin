@@ -41,6 +41,7 @@ router.post(
 router.get(
   '/refresh-token',
   purifyRequest(AuthValidations.refreshToken),
+  auth.refresh(),
   AuthControllers.refreshToken,
 );
 

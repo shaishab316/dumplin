@@ -6,55 +6,54 @@ import ServerError from '../../../errors/ServerError';
 import { Document, Types } from 'mongoose';
 import config from '../../../config';
 import { Response } from 'express';
-import { userExcludeFields } from '../user/User.constant';
+import { userSelect } from '../user/User.constant';
 import { TUser } from '../user/User.interface';
 import { ETokenType } from './Auth.enum';
 
 export const AuthServices = {
   async login(user: TUser, password: string) {
     if (!(await bcrypt.compare(password, user.password!)))
-      throw new ServerError(StatusCodes.UNAUTHORIZED, 'You are not authorized');
+      throw new ServerError(
+        StatusCodes.UNAUTHORIZED,
+        'Your credentials are incorrect.',
+      );
 
     return this.retrieveToken(user._id!);
   },
 
-  setRefreshToken(res: Response, refreshToken: string) {
-    res.cookie('refreshToken', refreshToken, {
-      secure: !config.server.isDevelopment,
-      maxAge: verifyToken(refreshToken, ETokenType.REFRESH).exp! * 1000,
-      httpOnly: true,
-    });
+  setTokens(res: Response, tokens: Record<string, string>) {
+    Object.entries(tokens).forEach(([key, value]) =>
+      res.cookie(key, value, {
+        secure: !config.server.isDevelopment,
+        maxAge:
+          verifyToken(value, key.replace('_token', '') as ETokenType).exp! *
+          1000,
+        httpOnly: true,
+      }),
+    );
   },
 
   async resetPassword(user: TUser & Document, password: string) {
+    if (!user.canResetPassword)
+      throw new ServerError(
+        StatusCodes.UNAUTHORIZED,
+        'Your reset link has expired.',
+      );
+
     user.password = password;
+    user.canResetPassword = false;
 
     return user.save();
   },
 
-  async refreshToken(refreshToken: string) {
-    const token = refreshToken.split(' ')[0];
-
-    if (!token)
-      throw new ServerError(StatusCodes.UNAUTHORIZED, 'You are not logged in!');
-
-    const { userId } = verifyToken(token, ETokenType.REFRESH);
-
-    const user = await User.findById(userId).select('_id');
-
-    if (!user) throw new ServerError(StatusCodes.NOT_FOUND, 'User not found!');
-
-    return this.retrieveToken(user._id);
-  },
-
   async retrieveToken(userId: Types.ObjectId) {
-    const accessToken = createToken({ userId }, ETokenType.ACCESS);
-    const refreshToken = createToken({ userId }, ETokenType.REFRESH);
+    const access_token = createToken({ userId }, ETokenType.ACCESS);
+    const refresh_token = createToken({ userId }, ETokenType.REFRESH);
 
     const userData = await User.findById(userId)
-      .select('-' + userExcludeFields.join(' -'))
+      .select(userSelect.join(' '))
       .lean();
 
-    return { accessToken, user: userData, refreshToken };
+    return { access_token, user: userData, refresh_token };
   },
 };

@@ -26,6 +26,10 @@ const userSchema = new Schema<TUser>(
       enum: Object.values(EUserRole),
       default: EUserRole.USER,
     },
+    canResetPassword: {
+      type: Boolean,
+      default: false,
+    },
     phone: String,
     googleId: String,
     facebookId: String,

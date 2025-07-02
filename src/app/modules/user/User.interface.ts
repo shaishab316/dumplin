@@ -10,6 +10,7 @@ export type TUser = {
   avatar?: string;
   role: EUserRole;
   phone?: string;
+  canResetPassword?: boolean;
 
   googleId?: string;
   facebookId?: string;

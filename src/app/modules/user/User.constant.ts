@@ -1,1 +1,1 @@
-export const userExcludeFields = ['password', 'updatedAt'];
+export const userSelect = ["_id", "name", "email", "phone", "avatar", "role"];

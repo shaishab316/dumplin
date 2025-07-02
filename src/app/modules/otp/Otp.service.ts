@@ -52,6 +52,7 @@ export const OtpServices = {
       );
 
     await validOtp.deleteOne();
+    await User.findOneAndUpdate({ _id: user }, { canResetPassword: true });
 
     return createToken({ userId: user }, ETokenType.RESET);
   },

@@ -3,10 +3,10 @@ import User from './User.model';
 import { StatusCodes } from 'http-status-codes';
 import deleteFile from '../../../util/file/deleteFile';
 import ServerError from '../../../errors/ServerError';
-import { userExcludeFields } from './User.constant';
 import bcrypt from 'bcryptjs';
 import { Document, Types } from 'mongoose';
 import { TList } from '../query/Query.interface';
+import { userSelect } from './User.constant';
 
 export const UserServices = {
   async create(user: TUser) {
@@ -21,7 +21,7 @@ export const UserServices = {
   async edit(user: TUser & { oldAvatar: string }) {
     const updatedUser = await User.findByIdAndUpdate(user!._id, user, {
       new: true,
-    }).select('-' + userExcludeFields.join(' -'));
+    }).select(userSelect.join(' '));
 
     if (user.avatar) await deleteFile(user.oldAvatar);
 
@@ -51,7 +51,7 @@ export const UserServices = {
       ];
 
     const users = await User.find(filter)
-      .select('-' + userExcludeFields.join(' -'))
+      .select(userSelect.join(' '))
       .skip((page - 1) * limit)
       .limit(limit);
 

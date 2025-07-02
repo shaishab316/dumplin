@@ -5,16 +5,16 @@ import serveResponse from '../../../util/server/serveResponse';
 
 export const AuthControllers = {
   login: catchAsync(async (req, res) => {
-    const { accessToken, refreshToken, user } = await AuthServices.login(
+    const { access_token, refresh_token, user } = await AuthServices.login(
       req.user!,
       req.body.password,
     );
 
-    AuthServices.setRefreshToken(res, refreshToken);
+    AuthServices.setTokens(res, { access_token, refresh_token });
 
     serveResponse(res, {
       message: 'Login successfully!',
-      data: { token: accessToken, user },
+      data: { token: access_token, user },
     });
   }),
 
@@ -23,6 +23,7 @@ export const AuthControllers = {
       res.clearCookie(cookie, {
         httpOnly: true,
         secure: !config.server.isDevelopment,
+        maxAge: 0, // expires immediately
       }),
     );
 
@@ -39,14 +40,14 @@ export const AuthControllers = {
     });
   }),
 
-  refreshToken: catchAsync(async ({ cookies }, res) => {
-    const { accessToken } = await AuthServices.refreshToken(
-      cookies.refreshToken,
-    );
+  refreshToken: catchAsync(async ({ user }, res) => {
+    const { access_token } = await AuthServices.retrieveToken(user!._id!);
+
+    AuthServices.setTokens(res, { access_token });
 
     serveResponse(res, {
-      message: 'AccessToken generated successfully!',
-      data: { token: accessToken },
+      message: 'Token refreshed successfully!',
+      data: { token: access_token },
     });
   }),
 };

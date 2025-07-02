@@ -34,8 +34,9 @@ export const createToken = (payload: JwtPayload, type: ETokenType) => {
  * @param type - The type of token to verify
  * @returns The decoded token
  */
-export const verifyToken = (token: string, type: ETokenType) => {
-  if (!token?.trim())
+export const verifyToken = (token = '', type: ETokenType) => {
+  token = token.trim();
+  if (!token)
     throw new ServerError(StatusCodes.UNAUTHORIZED, 'You are not logged in!');
 
   try {
