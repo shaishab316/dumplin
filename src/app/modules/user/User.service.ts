@@ -33,11 +33,14 @@ export const UserServices = {
     { newPassword, oldPassword }: Record<string, string>,
   ) {
     if (!(await bcrypt.compare(oldPassword, user.password!)))
-      throw new ServerError(StatusCodes.UNAUTHORIZED, 'You are not authorized');
+      throw new ServerError(
+        StatusCodes.UNAUTHORIZED,
+        'Your credentials are incorrect.',
+      );
 
     user.password = newPassword;
 
-    await user.save();
+    return user.save();
   },
 
   async list({ page, limit, search }: TList) {

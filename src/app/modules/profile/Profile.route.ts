@@ -18,7 +18,7 @@ router.patch(
   UserControllers.edit,
 );
 
-router.patch(
+router.post(
   '/change-password',
   auth(),
   purifyRequest(UserValidations.cngPass),

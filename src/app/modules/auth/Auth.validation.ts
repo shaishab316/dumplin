@@ -31,4 +31,14 @@ export const AuthValidations = {
         .min(6, 'Password must be 6 characters long'),
     }),
   }),
+
+  loginWith: z.object({
+    params: z.object({
+      provider: z.enum(['facebook', 'google', 'apple'], {
+        errorMap: () => ({
+          message: 'Provider must be one of facebook, google, or apple',
+        }),
+      }),
+    }),
+  }),
 };

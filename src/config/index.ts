@@ -95,6 +95,11 @@ const config = {
     email: env('admin email', email),
     password: env('admin password', genSecret(4), 'Admin info - end', false),
   },
+  auth: {
+    apple: {
+      client: env('apple client', '', 'Auth credentials - start'),
+    },
+  },
   ai: {
     gemini: {
       key: env('gemini key', '', 'AI credentials - start'),

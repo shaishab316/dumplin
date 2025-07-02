@@ -23,6 +23,12 @@ router.post(
   AuthControllers.login,
 );
 
+router.post(
+  '/login/:provider',
+  purifyRequest(AuthValidations.loginWith),
+  AuthControllers.loginWith,
+);
+
 router.post('/logout', AuthControllers.logout);
 
 router.use('/otp', OtpRoutes.user);

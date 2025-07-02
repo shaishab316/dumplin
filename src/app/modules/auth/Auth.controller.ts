@@ -56,4 +56,16 @@ export const AuthControllers = {
       data: { token: access_token },
     });
   }),
+
+  loginWith: catchAsync(async (req, res) => {
+    const { access_token, refresh_token, user } =
+      await AuthServices.loginWith(req);
+
+    AuthServices.setTokens(res, { access_token, refresh_token });
+
+    serveResponse(res, {
+      message: 'Login successfully!',
+      data: { token: access_token, user },
+    });
+  }),
 };
