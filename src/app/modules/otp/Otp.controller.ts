@@ -1,5 +1,6 @@
 import catchAsync from '../../../util/server/catchAsync';
 import serveResponse from '../../../util/server/serveResponse';
+import { AuthServices } from '../auth/Auth.service';
 import { OtpServices } from './Otp.service';
 
 export const OtpControllers = {
@@ -15,11 +16,13 @@ export const OtpControllers = {
   }),
 
   verify: catchAsync(async (req, res) => {
-    const resetToken = await OtpServices.verify(req.user!._id!, req.body.otp);
+    const reset_token = await OtpServices.verify(req.user!._id!, req.body.otp);
+
+    AuthServices.setTokens(res, { reset_token });
 
     serveResponse(res, {
       message: 'OTP verified successfully!',
-      data: { resetToken },
+      data: { reset_token },
     });
   }),
 

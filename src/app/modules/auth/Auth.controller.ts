@@ -35,6 +35,12 @@ export const AuthControllers = {
   resetPassword: catchAsync(async ({ body, user }, res) => {
     await AuthServices.resetPassword(user as any, body.password);
 
+    res.clearCookie('reset_token', {
+      httpOnly: true,
+      secure: !config.server.isDevelopment,
+      maxAge: 0, // expires immediately
+    });
+
     serveResponse(res, {
       message: 'Password reset successfully!',
     });

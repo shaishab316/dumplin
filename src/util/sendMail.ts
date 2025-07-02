@@ -20,13 +20,13 @@ let transporter = nodemailer.createTransport({
 if (mock_mail) {
   logger.info(colors.yellow('Mock mail enabled'));
   transporter = {
-    sendMail: async () => {
+    sendMail: ({ to = 'mock_mail' }) => {
       logger.info(colors.green('Mock mail sent'));
       return {
-        accepted: ['mock_mail'],
+        accepted: [to],
       };
     },
-    verify: async () => true,
+    verify: () => true,
   } as any;
 }
 
