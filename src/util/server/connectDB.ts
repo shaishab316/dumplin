@@ -7,6 +7,7 @@ import { errorLogger, logger } from '../logger/logger';
  * Connects to the database
  */
 export default async function connectDB() {
+  logger.info(colors.green('🔑 Database connection started...'));
   try {
     await connect(config.url.database as string);
     logger.info(colors.green('🚀 Database connected successfully'));
