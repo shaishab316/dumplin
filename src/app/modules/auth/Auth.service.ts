@@ -74,8 +74,15 @@ export const AuthServices = {
         return await this.facebookLogin(token);
       case 'google':
         return await this.googleLogin(body);
-      case 'apple':
+
+      // case 'apple':
       //* TODO: implement apple login
+
+      default:
+        throw new ServerError(
+          StatusCodes.UNAUTHORIZED,
+          'Failed to login with ' + provider,
+        );
     }
   },
 
