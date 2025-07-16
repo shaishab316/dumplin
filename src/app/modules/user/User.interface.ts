@@ -2,7 +2,7 @@ import { Types } from 'mongoose';
 import { EUserRole } from './User.enum';
 
 export type TUser = {
-  _id?: Types.ObjectId;
+  _id: Types.ObjectId;
 
   name?: string;
   email: string;

@@ -1,15 +1,16 @@
 import { Schema } from 'mongoose';
 import { TChat } from './Chat.interface';
-import Message from '../message/Message.model';
+import { ChatConstants } from './Chat.constant';
 
 export const ChatMiddlewares = {
   schema: (schema: Schema<TChat>) => {
-    schema.post('findOneAndDelete', async function (doc, next) {
-      try {
-        await Message.deleteMany({ chat: doc._id });
-      } finally {
-        next();
-      }
+    schema.pre('save', function (next) {
+      if (this.name?.trim()) return next();
+
+      const { text, emoji, separator, date } = ChatConstants;
+
+      this.name = `${emoji()} ${text()} ${separator()} ${date()}`;
+      next();
     });
   },
 };

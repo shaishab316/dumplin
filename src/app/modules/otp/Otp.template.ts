@@ -12,7 +12,6 @@ export const OtpTemplates = {
   				content="width=device-width, initial-scale=1.0"
   			/>
   			<title>${config.server.name} - Password Reset Verification</title>
-				<base href="${config.server.href}" />
 				<style>
 					* {
 					  margin: 0;

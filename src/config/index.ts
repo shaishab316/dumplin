@@ -172,6 +172,16 @@ const config = {
       }),
     },
   },
+
+  auth: {
+    apple: {
+      client: env('apple client', '', {
+        up: 'Authentication - start',
+        regex: '^.{1,}$',
+        down: 'Authentication - end',
+      }),
+    },
+  },
 };
 
 export default config;

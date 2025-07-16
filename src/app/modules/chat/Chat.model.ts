@@ -1,29 +1,20 @@
-import { Schema, model } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import { TChat } from './Chat.interface';
-import autoPopulate from 'mongoose-autopopulate';
 import { ChatMiddlewares } from './Chat.middleware';
 
 const chatSchema = new Schema<TChat>(
   {
-    users: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
-      },
-    ],
-    lastMessage: {
+    user: {
       type: Schema.Types.ObjectId,
-      ref: 'Message',
-      default: null,
+      ref: 'User',
+      required: true,
     },
+    name: String,
   },
   { timestamps: true, versionKey: false },
 );
 
-chatSchema.plugin(autoPopulate);
-
-ChatMiddlewares.schema(chatSchema);
+chatSchema.plugin(ChatMiddlewares.schema);
 
 const Chat = model<TChat>('Chat', chatSchema);
 

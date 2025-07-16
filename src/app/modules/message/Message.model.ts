@@ -1,6 +1,5 @@
-import { Schema, model } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import { TMessage } from './Message.interface';
-import { MessageMiddlewares } from './Message.middleware';
 
 const messageSchema = new Schema<TMessage>(
   {
@@ -10,19 +9,32 @@ const messageSchema = new Schema<TMessage>(
       required: true,
     },
     sender: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
+      type: String,
+      enum: ['user', 'bot'],
       required: true,
     },
     content: {
       type: String,
       required: true,
     },
+    cards: [
+      {
+        name: String,
+        cuisine: String,
+        price_range: String,
+        rating: Number,
+        phone: String,
+        website: String,
+        location: String,
+        coordinates: [Number],
+      },
+    ],
   },
-  { timestamps: true, versionKey: false },
+  {
+    timestamps: true,
+    versionKey: false,
+  },
 );
-
-MessageMiddlewares.schema(messageSchema);
 
 const Message = model<TMessage>('Message', messageSchema);
 
