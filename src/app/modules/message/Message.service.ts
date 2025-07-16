@@ -2,61 +2,72 @@ import Message from './Message.model';
 import { TList } from '../query/Query.interface';
 import { Types } from 'mongoose';
 import { TPagination } from '../../../util/server/serveResponse';
+import config from '../../../config';
+import axios from 'axios';
+import { TMessage } from './Message.interface';
+import Chat from '../chat/Chat.model';
 
 export const MessageServices = {
-  // async chat(chatId: string, message: string) {
-  //   const chat: any = (await Chat.findById(chatId).populate('bot', 'context'))!;
+  async ask(sessionId: Types.ObjectId, { question, longitude, latitude }: any) {
+    const aiUrl = new URL(config.url.ai + '/ask');
 
-  //   const histories = await Message.find({ chat: chatId })
-  //     .sort({ createdAt: -1 })
-  //     .select('content sender -_id')
-  //     .limit(5);
+    aiUrl.searchParams.set('session_id', sessionId.toString());
+    if (longitude && latitude) {
+      aiUrl.searchParams.set('longitude', longitude);
+      aiUrl.searchParams.set('latitude', latitude);
+    }
 
-  //   const messages: OpenAI.ChatCompletionMessageParam[] = [
-  //     { role: 'system', content: chat.bot.context },
-  //     ...histories.reverse().map(msg => ({
-  //       role: (msg.sender === 'user' ? 'user' : 'assistant') as
-  //         | 'user'
-  //         | 'assistant',
-  //       content: msg.content,
-  //     })),
-  //     { role: 'user', content: message },
-  //   ];
+    const { data } = await axios.post(aiUrl.toString(), { question });
 
-  //   await Message.create({ chat: chatId, content: message, sender: 'user' });
+    const messageData: TMessage = {
+      session_id: sessionId,
+      user_message: question,
+      bot_response: data.answer,
+    };
 
-  //   const completion = await openai.chat.completions.create({
-  //     model: 'gpt-4o',
-  //     messages,
-  //   });
+    if (data.type === 'json') {
+      try {
+        const jsonData = JSON.parse(
+          data.answer.split('```json')[1]?.split('```')[0] || '{}',
+        );
 
-  //   const { content } = completion.choices[0].message;
+        messageData.recommendations = jsonData?.recommendations || [];
+        messageData.bot_response =
+          jsonData?.user_readable_response || 'I have found these restaurants:';
+        messageData.hasRecommendations = true;
 
-  //   if (!content)
-  //     throw new ServerError(
-  //       StatusCodes.BAD_REQUEST,
-  //       'Failed to generate response',
-  //     );
+        const chatTitle = jsonData.chat_title.trim();
 
-  //   await Message.create({ chat: chatId, content, sender: 'bot' });
+        if (chatTitle)
+          await Chat.findByIdAndUpdate(sessionId, {
+            name: chatTitle,
+          });
+      } catch {
+        messageData.bot_response = "I couldn't find any restaurants.";
+        messageData.recommendations = [];
+      }
+    } else {
+      await Chat.findByIdAndUpdate(sessionId, {
+        name: messageData.bot_response.slice(0, 50),
+      });
+    }
 
-  //   const { emoji, separator, date } = ChatConstants;
+    return Message.create(messageData);
+  },
 
-  //   chat.name = `${emoji()} ${this.genTitle(content!)} ${separator()} ${date()}`;
-  //   await chat.save();
-
-  //   return content;
-  // },
-
-  async list({ chat, page, limit }: TList & { chat: Types.ObjectId }) {
-    const messages = await Message.find({ chat })
+  async list({
+    session_id,
+    page,
+    limit,
+  }: TList & { session_id: Types.ObjectId }) {
+    const messages = await Message.find({ session_id })
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
       .select('-chat')
       .lean();
 
-    const total = await Message.countDocuments({ chat });
+    const total = await Message.countDocuments({ session_id });
 
     return {
       meta: {

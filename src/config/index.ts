@@ -74,6 +74,9 @@ const config = {
     api_doc: env('api doc', '', {
       regex: '^https?:\\/\\/.*$|^$',
     }),
+    ai: env('ai url', '', {
+      regex: '^https?:\\/\\/.*$|^$',
+    }),
     ui: env('ui url', '', {
       regex: '^https?:\\/\\/.*$|^$',
       down: 'Database info - end',

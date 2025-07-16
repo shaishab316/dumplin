@@ -3,21 +3,14 @@ import { TMessage } from './Message.interface';
 
 const messageSchema = new Schema<TMessage>(
   {
-    chat: {
+    session_id: {
       type: Schema.Types.ObjectId,
       ref: 'Chat',
       required: true,
     },
-    sender: {
-      type: String,
-      enum: ['user', 'bot'],
-      required: true,
-    },
-    content: {
-      type: String,
-      required: true,
-    },
-    cards: [
+    user_message: String,
+    bot_response: String,
+    recommendations: [
       {
         name: String,
         cuisine: String,
@@ -29,6 +22,10 @@ const messageSchema = new Schema<TMessage>(
         coordinates: [Number],
       },
     ],
+    hasRecommendations: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

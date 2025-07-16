@@ -5,12 +5,14 @@ import { ChatServices } from './Chat.service';
 
 export const ChatControllers = {
   create: catchAsync(async ({ user }, res) => {
-    const data = await ChatServices.create(user._id);
+    const chat = await ChatServices.create(user._id);
 
     serveResponse(res, {
       statusCode: StatusCodes.CREATED,
       message: 'Chat created successfully',
-      data,
+      data: {
+        session_id: chat._id,
+      },
     });
   }),
 

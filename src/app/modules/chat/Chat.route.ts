@@ -5,12 +5,13 @@ import { ChatValidations } from './Chat.validation';
 import { MessageControllers } from '../message/Message.controller';
 import { QueryValidations } from '../query/Query.validation';
 import Chat from './Chat.model';
+import { MessageValidations } from '../message/Message.validation';
 
 const router = Router();
 
 router.get('/', purifyRequest(QueryValidations.list), ChatControllers.list);
 
-router.post('/create', ChatControllers.create);
+router.post('/create-session', ChatControllers.create);
 
 router.patch(
   '/:chatId/rename',
@@ -35,13 +36,13 @@ router.get(
   MessageControllers.list,
 );
 
-// router.post(
-//   '/:chatId',
-//   purifyRequest(
-//     QueryValidations.exists('chatId', Chat),
-//     MessageValidations.chat,
-//   ),
-//   MessageControllers.chat,
-// );
+router.post(
+  '/:chatId/ask',
+  purifyRequest(
+    QueryValidations.exists('chatId', Chat),
+    MessageValidations.chat,
+  ),
+  MessageControllers.ask,
+);
 
 export const ChatRoutes = router;

@@ -4,10 +4,11 @@ import { TCoordinates } from '../../../types/location';
 export type TMessage = {
   _id?: Types.ObjectId;
 
-  chat: Types.ObjectId;
-  content: string;
-  cards?: TCard[];
-  sender: 'user' | 'bot';
+  session_id: Types.ObjectId;
+  user_message: string;
+  bot_response: string;
+  recommendations?: TCard[];
+  hasRecommendations?: boolean;
 
   createdAt?: Date;
   updatedAt?: Date;
