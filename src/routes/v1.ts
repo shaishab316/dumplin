@@ -5,6 +5,7 @@ import AdminRoutes from '../app/modules/admin/Admin.route';
 import { AuthRoutes } from '../app/modules/auth/Auth.route';
 import { ProfileRoutes } from '../app/modules/profile/Profile.route';
 import { ChatRoutes } from '../app/modules/chat/Chat.route';
+import { FavoriteRestaurantRoutes } from '../app/modules/favoriteRestaurant/FavoriteRestaurant.route';
 
 const routes: TRoute[] = [
   {
@@ -20,6 +21,11 @@ const routes: TRoute[] = [
     path: '/chats',
     middlewares: [auth()],
     route: ChatRoutes,
+  },
+  {
+    path: '/favorite-restaurants',
+    middlewares: [auth()],
+    route: FavoriteRestaurantRoutes,
   },
   {
     path: '/admin',

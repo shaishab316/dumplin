@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
-import { TCard, TMessage } from './Message.interface';
+import { TRestaurant, TMessage } from './Message.interface';
 
-const recommendationSchema = new Schema<TCard>(
+export const restaurantSchema = new Schema<TRestaurant>(
   {
     name: String,
     cuisine: String,
@@ -24,7 +24,7 @@ const messageSchema = new Schema<TMessage>(
     },
     user_message: String,
     bot_response: String,
-    recommendations: [recommendationSchema],
+    recommendations: [restaurantSchema],
     hasRecommendations: {
       type: Boolean,
       default: false,

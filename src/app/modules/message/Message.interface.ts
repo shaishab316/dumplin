@@ -7,14 +7,14 @@ export type TMessage = {
   session_id: Types.ObjectId;
   user_message: string;
   bot_response: string;
-  recommendations?: TCard[];
+  recommendations?: TRestaurant[];
   hasRecommendations?: boolean;
 
   createdAt?: Date;
   updatedAt?: Date;
 };
 
-export type TCard = {
+export type TRestaurant = {
   name: string;
   cuisine: string;
   price_range: string;
