@@ -25,8 +25,8 @@ export const ChatControllers = {
     });
   }),
 
-  delete: catchAsync(async (req, res) => {
-    await ChatServices.delete(req.params.chatId);
+  delete: catchAsync(async ({ params }, res) => {
+    await ChatServices.delete(params.chatId);
 
     serveResponse(res, {
       message: 'Chat deleted successfully',

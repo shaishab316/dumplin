@@ -1,5 +1,19 @@
 import { model, Schema } from 'mongoose';
-import { TMessage } from './Message.interface';
+import { TCard, TMessage } from './Message.interface';
+
+const recommendationSchema = new Schema<TCard>(
+  {
+    name: String,
+    cuisine: String,
+    price_range: String,
+    rating: Number,
+    phone: String,
+    website: String,
+    location: String,
+    coordinates: [Number],
+  },
+  { _id: false },
+);
 
 const messageSchema = new Schema<TMessage>(
   {
@@ -10,18 +24,7 @@ const messageSchema = new Schema<TMessage>(
     },
     user_message: String,
     bot_response: String,
-    recommendations: [
-      {
-        name: String,
-        cuisine: String,
-        price_range: String,
-        rating: Number,
-        phone: String,
-        website: String,
-        location: String,
-        coordinates: [Number],
-      },
-    ],
+    recommendations: [recommendationSchema],
     hasRecommendations: {
       type: Boolean,
       default: false,

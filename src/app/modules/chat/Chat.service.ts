@@ -17,7 +17,7 @@ export const ChatServices = {
     return useSession(async session => {
       return Promise.all([
         Chat.findByIdAndDelete(chat).session(session),
-        Message.deleteMany({ chat }).session(session),
+        Message.deleteMany({ session_id: chat }).session(session),
       ]);
     });
   },
