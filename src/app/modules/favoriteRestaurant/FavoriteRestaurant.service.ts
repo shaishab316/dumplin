@@ -5,6 +5,13 @@ import { TList } from '../query/Query.interface';
 import { TPagination } from '../../../util/server/serveResponse';
 
 export const FavoriteRestaurantServices = {
+  async isFavorite(restaurantName: string, user: Types.ObjectId) {
+    return FavoriteRestaurant.exists({
+      'restaurant.name': restaurantName,
+      user,
+    });
+  },
+
   async add(favoriteRestaurantData: TFavoriteRestaurant) {
     return FavoriteRestaurant.create(favoriteRestaurantData);
   },

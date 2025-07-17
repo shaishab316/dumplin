@@ -15,4 +15,14 @@ export const FavoriteRestaurantValidations = {
       coordinates: z.array(z.number()).optional(),
     }),
   }),
+
+  isFavorite: z.object({
+    query: z.object({
+      restaurantName: z
+        .string({
+          required_error: 'Restaurant Name is required',
+        })
+        .min(1, 'Restaurant Name is required'),
+    }),
+  }),
 };

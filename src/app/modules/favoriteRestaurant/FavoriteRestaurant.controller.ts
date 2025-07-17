@@ -4,6 +4,18 @@ import serveResponse from '../../../util/server/serveResponse';
 import { FavoriteRestaurantServices } from './FavoriteRestaurant.service';
 
 export const FavoriteRestaurantControllers = {
+  isFavorite: catchAsync(async ({ query, user }, res) => {
+    const isFavorite = !!(await FavoriteRestaurantServices.isFavorite(
+      query.restaurantName,
+      user._id,
+    ));
+
+    serveResponse(res, {
+      message: isFavorite ? 'Favorite' : 'Not favorite',
+      data: { isFavorite },
+    });
+  }),
+
   add: catchAsync(async ({ body, user }, res) => {
     await FavoriteRestaurantServices.add({
       restaurant: body,

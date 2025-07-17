@@ -14,6 +14,12 @@ router.get(
 );
 
 router.get(
+  '/is-favorite',
+  purifyRequest(FavoriteRestaurantValidations.isFavorite),
+  FavoriteRestaurantControllers.isFavorite,
+);
+
+router.get(
   '/:favRestaurantId',
   purifyRequest(QueryValidations.exists('favRestaurantId', FavoriteRestaurant)),
   FavoriteRestaurantControllers.retrieve,
